@@ -10,7 +10,7 @@
     "release": "bash scripts/release.sh",
     "check": "biome check",
     "check:write": "biome check --write",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit && pnpm run --filter app typecheck"
   },
   "keywords": [],
   "author": "r4ai",

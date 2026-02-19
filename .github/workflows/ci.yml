@@ -8,8 +8,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  check:
-    name: Check
+  check-rust:
+    name: Check (Rust)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -21,6 +21,21 @@ jobs:
 
       - name: Cache Rust
         uses: Swatinem/rust-cache@v2
+
+      - name: cargo fmt
+        run: cargo fmt --check
+
+      - name: cargo check
+        run: cargo check
+
+      - name: cargo clippy
+        run: cargo clippy -- -D warnings
+
+  check-js:
+    name: Check (JS/TS)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -35,15 +50,6 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
-
-      - name: cargo fmt
-        run: cargo fmt --check
-
-      - name: cargo check
-        run: cargo check
-
-      - name: cargo clippy
-        run: cargo clippy -- -D warnings
 
       - name: biome check
         run: pnpm run check
