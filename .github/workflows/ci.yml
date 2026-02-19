@@ -48,6 +48,9 @@ jobs:
       - name: biome check
         run: pnpm run check
 
+      - name: typecheck
+        run: pnpm run typecheck
+
   build:
     name: Build
     runs-on: ubuntu-latest
