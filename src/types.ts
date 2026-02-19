@@ -21,4 +21,7 @@ export interface ParseOptions {
   mode?: ParseMode;
 }
 
-export declare function parse(text: string, options?: ParseOptions): ParseResult;
+export declare function parse(
+  text: string,
+  options?: ParseOptions,
+): ParseResult;
