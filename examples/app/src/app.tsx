@@ -1,4 +1,4 @@
-import init, * as typst from "@r4ai/typst-ast";
+import init, * as typst from "@r4ai/typst-ast-web";
 import { useEffect, useRef, useState } from "react";
 import "./app.css";
 

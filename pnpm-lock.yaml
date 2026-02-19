@@ -18,7 +18,7 @@ importers:
 
   examples/app:
     dependencies:
-      '@r4ai/typst-ast':
+      '@r4ai/typst-ast-web':
         specifier: workspace:*
         version: link:../../dist/web
       react:
