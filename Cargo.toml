@@ -3,6 +3,7 @@ name = "typst-ast"
 version = "0.1.0"
 authors = ["r4ai"]
 license = "MIT"
+repository = "https://github.com/r4ai/typst-ast"
 keywords = ["typst"]
 edition = "2024"
 
