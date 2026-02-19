@@ -8,7 +8,7 @@ export function App() {
   const [ready, setReady] = useState(false);
   const [source, setSource] = useState("= Hello\n\nThis is *typst*.");
   const [mode, setMode] = useState<Mode>("markup");
-  const [result, setResult] = useState<unknown>(null);
+  const [result, setResult] = useState<typst.ParseResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const initialized = useRef(false);
 

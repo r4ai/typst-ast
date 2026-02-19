@@ -3,6 +3,34 @@ use wasm_bindgen::prelude::*;
 
 use typst_syntax::{LinkedNode, SyntaxNode};
 
+#[wasm_bindgen(typescript_custom_section)]
+const TS_TYPES: &str = r#"
+export interface SyntaxNode {
+  kind: string;
+  range: [number, number];
+  text?: string;
+  children: SyntaxNode[];
+}
+
+export interface ParseError {
+  message: string;
+  range: [number, number];
+}
+
+export interface ParseResult {
+  root: SyntaxNode;
+  errors: ParseError[];
+}
+
+export type ParseMode = "markup" | "code" | "math";
+
+export interface ParseOptions {
+  mode?: ParseMode;
+}
+
+export declare function parse(text: string, options?: ParseOptions): ParseResult;
+"#;
+
 #[wasm_bindgen(start)]
 pub fn start() {}
 
@@ -83,7 +111,7 @@ fn make_result(root: SyntaxNode) -> Result<JsValue, JsValue> {
     serde_wasm_bindgen::to_value(&out).map_err(|e| JsValue::from_str(&e.to_string()))
 }
 
-#[wasm_bindgen]
+#[wasm_bindgen(skip_typescript)]
 pub fn parse(text: &str, options: JsValue) -> Result<JsValue, JsValue> {
     let opts: ParseOptions = if options.is_undefined() || options.is_null() {
         ParseOptions::default()
