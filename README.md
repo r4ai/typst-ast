@@ -1,6 +1,6 @@
 # typst-ast
 
-A WebAssembly library that parses [Typst](https://typst.app/) source code and returns its AST as a JSON-serializable object. Built with Rust and [`typst-syntax`](https://crates.io/crates/typst-syntax), distributed as npm packages via `wasm-pack`.
+A WebAssembly library that parses [Typst](https://typst.app/) source code and returns its CST/AST as a JSON-serializable object. Built with Rust and [`typst-syntax`](https://crates.io/crates/typst-syntax), distributed as npm packages via `wasm-pack`.
 
 ## Packages
 
@@ -39,7 +39,7 @@ console.log(result);
 
 #### `parse(text, options?)`
 
-Parses Typst source text and returns the AST.
+Parses Typst source text and returns the CST.
 
 **Parameters**
 
