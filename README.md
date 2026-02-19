@@ -49,22 +49,22 @@ Parses Typst source text and returns the AST.
 **Return value**
 
 ```ts
-type ParseResult = {
-  root: Node;
+interface ParseResult {
+  root: SyntaxNode;
   errors: ParseError[];
-};
+}
 
-type Node = {
-  kind: string; // SyntaxKind variant name (e.g. "Markup", "Heading", "Strong")
-  range: [number, number]; // [start, end] byte offsets
-  text: string | null; // leaf node text, null for inner nodes
-  children: Node[];
-};
+interface SyntaxNode {
+  kind: string;
+  range: [number, number];
+  text?: string;
+  children: SyntaxNode[];
+}
 
-type ParseError = {
+interface ParseError {
   message: string;
   range: [number, number];
-};
+}
 ```
 
 ## Development
