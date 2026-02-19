@@ -39,7 +39,11 @@ fn node_to_json(node: &LinkedNode) -> JNode {
     JNode {
         kind: format!("{:?}", node.get().kind()),
         range: [node.offset(), node.offset() + node.get().len()],
-        text: if text.is_empty() { None } else { Some(text.to_string()) },
+        text: if text.is_empty() {
+            None
+        } else {
+            Some(text.to_string())
+        },
         children: node.children().map(|c| node_to_json(&c)).collect(),
     }
 }
@@ -84,8 +88,7 @@ pub fn parse(text: &str, options: JsValue) -> Result<JsValue, JsValue> {
     let opts: ParseOptions = if options.is_undefined() || options.is_null() {
         ParseOptions::default()
     } else {
-        serde_wasm_bindgen::from_value(options)
-            .map_err(|e| JsValue::from_str(&e.to_string()))?
+        serde_wasm_bindgen::from_value(options).map_err(|e| JsValue::from_str(&e.to_string()))?
     };
 
     let root = match opts.mode.unwrap_or_default() {
