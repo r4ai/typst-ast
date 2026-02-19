@@ -11,6 +11,9 @@ importers:
       '@biomejs/biome':
         specifier: 2.4.2
         version: 2.4.2
+      typescript:
+        specifier: ~5.9.3
+        version: 5.9.3
 
   dist/node: {}
 

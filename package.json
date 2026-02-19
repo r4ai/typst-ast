@@ -9,7 +9,8 @@
     "build:lib": "pnpm run build:lib:web && pnpm run build:lib:node",
     "release": "bash scripts/release.sh",
     "check": "biome check",
-    "check:write": "biome check --write"
+    "check:write": "biome check --write",
+    "typecheck": "tsc --noEmit"
   },
   "keywords": [],
   "author": "r4ai",
@@ -20,6 +21,7 @@
     "dist/*"
   ],
   "devDependencies": {
-    "@biomejs/biome": "2.4.2"
+    "@biomejs/biome": "2.4.2",
+    "typescript": "~5.9.3"
   }
 }
