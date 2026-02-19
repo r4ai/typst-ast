@@ -57,9 +57,15 @@ jobs:
           tag="${{ github.event.inputs.tag || github.ref_name }}"
           echo "version=${tag#v}" >> "$GITHUB_OUTPUT"
 
-      - name: Update Cargo.toml version
+      - name: Verify Cargo.toml version matches tag
         run: |
-          sed -i 's/^version = ".*"/version = "${{ steps.version.outputs.version }}"/' Cargo.toml
+          cargo_version=$(grep '^version = ' Cargo.toml | head -1 | sed 's/version = "\(.*\)"/\1/')
+          tag_version="${{ steps.version.outputs.version }}"
+          if [ "$cargo_version" != "$tag_version" ]; then
+            echo "Version mismatch: Cargo.toml has '$cargo_version' but tag is '$tag_version'" >&2
+            exit 1
+          fi
+          echo "Version OK: $cargo_version"
 
       - name: Build
         run: pnpm run build:lib

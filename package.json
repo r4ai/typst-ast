@@ -7,6 +7,7 @@
     "build:lib:web": "rm -rf ./dist/web && wasm-pack build --release --target web --scope r4ai --out-dir=./dist/web && jq '.name = \"@r4ai/typst-ast-web\"' ./dist/web/package.json > ./dist/web/package.json.tmp && mv ./dist/web/package.json.tmp ./dist/web/package.json",
     "build:lib:node": "rm -rf ./dist/node && wasm-pack build --release --target nodejs --scope r4ai --out-dir=./dist/node && jq '.name = \"@r4ai/typst-ast-node\"' ./dist/node/package.json > ./dist/node/package.json.tmp && mv ./dist/node/package.json.tmp ./dist/node/package.json",
     "build:lib": "pnpm run build:lib:web && pnpm run build:lib:node",
+    "release": "bash scripts/release.sh",
     "check": "biome check",
     "check:write": "biome check --write"
   },
