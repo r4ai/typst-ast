@@ -1,0 +1,19 @@
+{
+  "name": "root",
+  "private": true,
+  "version": "0.0.0",
+  "description": "",
+  "scripts": {
+    "build:lib:web": "wasm-pack build --release --target web --scope r4ai --out-dir=./dist/web",
+    "build:lib:node": "wasm-pack build --release --target nodejs --scope r4ai --out-dir=./dist/node",
+    "build:lib": "pnpm run build:lib:web && pnpm run build:lib:node"
+  },
+  "keywords": [],
+  "author": "r4ai",
+  "license": "MIT",
+  "packageManager": "pnpm@10.26.2",
+  "workspaces": [
+    "examples/*",
+    "dist/*"
+  ]
+}

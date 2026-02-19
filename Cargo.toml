@@ -1,0 +1,16 @@
+[package]
+name = "typst-ast"
+version = "0.1.0"
+authors = ["r4ai"]
+license = "MIT"
+keywords = ["typst"]
+edition = "2024"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+serde = { version = "1.0.228", features = ["derive"] }
+serde-wasm-bindgen = "0.6.5"
+typst-syntax = "0.14.2"
+wasm-bindgen = "0.2.108"
