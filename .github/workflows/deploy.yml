@@ -72,8 +72,8 @@ jobs:
 
       - name: Publish @r4ai/typst-ast-web
         working-directory: dist/web
-        run: npm publish --access public --provenance
+        run: npm publish --access public
 
       - name: Publish @r4ai/typst-ast-node
         working-directory: dist/node
-        run: npm publish --access public --provenance
+        run: npm publish --access public
