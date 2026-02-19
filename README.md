@@ -21,7 +21,7 @@ await init();
 const result = parse("= Hello\n\nThis is *typst*.", { mode: "markup" });
 console.log(result);
 // {
-//   root: { kind: "Markup", range: [0, 26], text: null, children: [...] },
+//   root: { kind: "Markup", range: [0, 25], children: [...] },
 //   errors: []
 // }
 ```
