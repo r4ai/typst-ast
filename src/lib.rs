@@ -1,3 +1,5 @@
+mod ast;
+
 use serde::{Deserialize, Serialize};
 use wasm_bindgen::prelude::*;
 
@@ -11,7 +13,7 @@ pub fn start() {}
 
 #[derive(Deserialize, Default)]
 #[serde(rename_all = "lowercase")]
-enum ParseMode {
+pub(crate) enum ParseMode {
     #[default]
     Markup,
     Code,
@@ -24,9 +26,9 @@ struct ParseOptions {
 }
 
 #[derive(Serialize)]
-struct JError {
-    message: String,
-    range: [usize; 2],
+pub(crate) struct JError {
+    pub(crate) message: String,
+    pub(crate) range: [usize; 2],
 }
 
 #[derive(Serialize)]
@@ -51,7 +53,7 @@ fn node_to_json(node: &LinkedNode) -> JNode {
     }
 }
 
-fn collect_errors(node: &LinkedNode) -> Vec<JError> {
+pub(crate) fn collect_errors(node: &LinkedNode) -> Vec<JError> {
     if !node.get().erroneous() {
         return vec![];
     }
@@ -100,4 +102,24 @@ pub fn parse(text: &str, options: JsValue) -> Result<JsValue, JsValue> {
         ParseMode::Math => typst_syntax::parse_math(text),
     };
     make_result(root)
+}
+
+#[wasm_bindgen(js_name = "parseAst", skip_typescript)]
+pub fn parse_ast(text: &str, options: JsValue) -> Result<JsValue, JsValue> {
+    let opts: ParseOptions = if options.is_undefined() || options.is_null() {
+        ParseOptions::default()
+    } else {
+        serde_wasm_bindgen::from_value(options).map_err(|e| JsValue::from_str(&e.to_string()))?
+    };
+
+    let mode = opts.mode.unwrap_or_default();
+    let root = match &mode {
+        ParseMode::Markup => typst_syntax::parse(text),
+        ParseMode::Code => typst_syntax::parse_code(text),
+        ParseMode::Math => typst_syntax::parse_math(text),
+    };
+
+    let result = ast::make_ast_result(&root, &mode).map_err(|e| JsValue::from_str(&e))?;
+
+    serde_wasm_bindgen::to_value(&result).map_err(|e| JsValue::from_str(&e.to_string()))
 }

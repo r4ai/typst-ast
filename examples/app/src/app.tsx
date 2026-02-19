@@ -3,12 +3,16 @@ import { useEffect, useRef, useState } from "react";
 import "./app.css";
 
 type Mode = "markup" | "code" | "math";
+type OutputType = "cst" | "ast";
 
 export function App() {
   const [ready, setReady] = useState(false);
   const [source, setSource] = useState("= Hello\n\nThis is *typst*.");
   const [mode, setMode] = useState<Mode>("markup");
-  const [result, setResult] = useState<typst.ParseResult | null>(null);
+  const [outputType, setOutputType] = useState<OutputType>("ast");
+  const [result, setResult] = useState<
+    typst.ParseResult | typst.ParseAstResult | null
+  >(null);
   const [error, setError] = useState<string | null>(null);
   const initialized = useRef(false);
 
@@ -21,8 +25,11 @@ export function App() {
   const parse = () => {
     if (!ready) return;
     try {
-      const ast = typst.parse(source, { mode });
-      setResult(ast);
+      const r =
+        outputType === "ast"
+          ? typst.parseAst(source, { mode })
+          : typst.parse(source, { mode });
+      setResult(r);
       setError(null);
     } catch (e) {
       setError(String(e));
@@ -38,6 +45,13 @@ export function App() {
           <option value="markup">markup</option>
           <option value="code">code</option>
           <option value="math">math</option>
+        </select>
+        <select
+          value={outputType}
+          onChange={(e) => setOutputType(e.target.value as OutputType)}
+        >
+          <option value="ast">AST</option>
+          <option value="cst">CST</option>
         </select>
         <button type="button" onClick={parse} disabled={!ready}>
           {ready ? "Parse" : "Loading..."}
