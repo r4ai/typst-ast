@@ -6,6 +6,7 @@ use typst_syntax::ast::{self, AstNode};
 use typst_syntax::{LinkedNode, SyntaxNode};
 
 type OffsetMap = HashMap<*const SyntaxNode, usize>;
+type JRange = Option<[usize; 2]>;
 
 fn build_offset_map(node: &LinkedNode, map: &mut OffsetMap) {
     map.insert(node.get() as *const SyntaxNode, node.offset());
@@ -14,218 +15,223 @@ fn build_offset_map(node: &LinkedNode, map: &mut OffsetMap) {
     }
 }
 
-fn range_of(node: &SyntaxNode, offsets: &OffsetMap) -> [usize; 2] {
-    let offset = offsets[&(node as *const SyntaxNode)];
-    [offset, offset + node.len()]
+fn range_of(node: &SyntaxNode, offsets: &OffsetMap) -> JRange {
+    // `typst-syntax` can return detached placeholder nodes for missing children
+    // in erroneous input. Those placeholders are not part of the parsed tree,
+    // so they are absent from the offset map.
+    offsets
+        .get(&(node as *const SyntaxNode))
+        .copied()
+        .map(|offset| [offset, offset + node.len()])
 }
 
 #[derive(Serialize)]
 #[serde(tag = "kind", rename_all = "camelCase")]
 pub enum JAstExpr {
     Text {
-        range: [usize; 2],
+        range: JRange,
         text: String,
     },
     Space {
-        range: [usize; 2],
+        range: JRange,
     },
     Linebreak {
-        range: [usize; 2],
+        range: JRange,
     },
     Parbreak {
-        range: [usize; 2],
+        range: JRange,
     },
     Escape {
-        range: [usize; 2],
+        range: JRange,
         character: char,
     },
     Shorthand {
-        range: [usize; 2],
+        range: JRange,
         character: char,
     },
     SmartQuote {
-        range: [usize; 2],
+        range: JRange,
         double: bool,
     },
     Strong {
-        range: [usize; 2],
+        range: JRange,
         body: Vec<JAstExpr>,
     },
     Emph {
-        range: [usize; 2],
+        range: JRange,
         body: Vec<JAstExpr>,
     },
     Raw {
-        range: [usize; 2],
+        range: JRange,
         lines: Vec<String>,
         lang: Option<String>,
         block: bool,
     },
     Link {
-        range: [usize; 2],
+        range: JRange,
         url: String,
     },
     Label {
-        range: [usize; 2],
+        range: JRange,
         name: String,
     },
     Ref {
-        range: [usize; 2],
+        range: JRange,
         target: String,
         supplement: Option<Vec<JAstExpr>>,
     },
     Heading {
-        range: [usize; 2],
+        range: JRange,
         depth: usize,
         body: Vec<JAstExpr>,
     },
     ListItem {
-        range: [usize; 2],
+        range: JRange,
         body: Vec<JAstExpr>,
     },
     EnumItem {
-        range: [usize; 2],
+        range: JRange,
         number: Option<u64>,
         body: Vec<JAstExpr>,
     },
     TermItem {
-        range: [usize; 2],
+        range: JRange,
         term: Vec<JAstExpr>,
         description: Vec<JAstExpr>,
     },
     Equation {
-        range: [usize; 2],
+        range: JRange,
         body: Vec<JAstExpr>,
         block: bool,
     },
 
     // Math
     Math {
-        range: [usize; 2],
+        range: JRange,
         body: Vec<JAstExpr>,
     },
     MathText {
-        range: [usize; 2],
+        range: JRange,
         text: JAstMathTextKind,
     },
     MathIdent {
-        range: [usize; 2],
+        range: JRange,
         name: String,
     },
     MathShorthand {
-        range: [usize; 2],
+        range: JRange,
         character: char,
     },
     MathAlignPoint {
-        range: [usize; 2],
+        range: JRange,
     },
     MathDelimited {
-        range: [usize; 2],
+        range: JRange,
         open: Box<JAstExpr>,
         body: Vec<JAstExpr>,
         close: Box<JAstExpr>,
     },
     MathAttach {
-        range: [usize; 2],
+        range: JRange,
         base: Box<JAstExpr>,
         bottom: Option<Box<JAstExpr>>,
         top: Option<Box<JAstExpr>>,
         primes: Option<usize>,
     },
     MathPrimes {
-        range: [usize; 2],
+        range: JRange,
         count: usize,
     },
     MathFrac {
-        range: [usize; 2],
+        range: JRange,
         num: Box<JAstExpr>,
         denom: Box<JAstExpr>,
     },
     MathRoot {
-        range: [usize; 2],
+        range: JRange,
         index: Option<u8>,
         radicand: Box<JAstExpr>,
     },
 
     // Literals
     Ident {
-        range: [usize; 2],
+        range: JRange,
         name: String,
     },
     None {
-        range: [usize; 2],
+        range: JRange,
     },
     Auto {
-        range: [usize; 2],
+        range: JRange,
     },
     Bool {
-        range: [usize; 2],
+        range: JRange,
         value: bool,
     },
     Int {
-        range: [usize; 2],
+        range: JRange,
         value: i64,
     },
     Float {
-        range: [usize; 2],
+        range: JRange,
         value: f64,
     },
     Numeric {
-        range: [usize; 2],
+        range: JRange,
         value: f64,
         unit: JAstUnit,
     },
     Str {
-        range: [usize; 2],
+        range: JRange,
         value: String,
     },
 
     // Code structures
     CodeBlock {
-        range: [usize; 2],
+        range: JRange,
         body: Vec<JAstExpr>,
     },
     ContentBlock {
-        range: [usize; 2],
+        range: JRange,
         body: Vec<JAstExpr>,
     },
     Parenthesized {
-        range: [usize; 2],
+        range: JRange,
         expr: Box<JAstExpr>,
     },
     Array {
-        range: [usize; 2],
+        range: JRange,
         items: Vec<JAstArrayItem>,
     },
     Dict {
-        range: [usize; 2],
+        range: JRange,
         items: Vec<JAstDictItem>,
     },
 
     // Operations
     Unary {
-        range: [usize; 2],
+        range: JRange,
         op: JAstUnOp,
         expr: Box<JAstExpr>,
     },
     Binary {
-        range: [usize; 2],
+        range: JRange,
         op: JAstBinOp,
         lhs: Box<JAstExpr>,
         rhs: Box<JAstExpr>,
     },
     FieldAccess {
-        range: [usize; 2],
+        range: JRange,
         target: Box<JAstExpr>,
         field: String,
     },
     FuncCall {
-        range: [usize; 2],
+        range: JRange,
         callee: Box<JAstExpr>,
         args: Vec<JAstArg>,
     },
     Closure {
-        range: [usize; 2],
+        range: JRange,
         name: Option<String>,
         params: Vec<JAstParam>,
         body: Box<JAstExpr>,
@@ -233,47 +239,47 @@ pub enum JAstExpr {
 
     // Bindings
     LetBinding {
-        range: [usize; 2],
+        range: JRange,
         binding_kind: JAstLetBindingKind,
         init: Option<Box<JAstExpr>>,
     },
     DestructAssignment {
-        range: [usize; 2],
+        range: JRange,
         pattern: JAstPattern,
         value: Box<JAstExpr>,
     },
 
     // Rules
     SetRule {
-        range: [usize; 2],
+        range: JRange,
         target: Box<JAstExpr>,
         args: Vec<JAstArg>,
         condition: Option<Box<JAstExpr>>,
     },
     ShowRule {
-        range: [usize; 2],
+        range: JRange,
         selector: Option<Box<JAstExpr>>,
         transform: Box<JAstExpr>,
     },
     Contextual {
-        range: [usize; 2],
+        range: JRange,
         body: Box<JAstExpr>,
     },
 
     // Control flow
     Conditional {
-        range: [usize; 2],
+        range: JRange,
         condition: Box<JAstExpr>,
         if_body: Box<JAstExpr>,
         else_body: Option<Box<JAstExpr>>,
     },
     WhileLoop {
-        range: [usize; 2],
+        range: JRange,
         condition: Box<JAstExpr>,
         body: Box<JAstExpr>,
     },
     ForLoop {
-        range: [usize; 2],
+        range: JRange,
         pattern: JAstPattern,
         iterable: Box<JAstExpr>,
         body: Box<JAstExpr>,
@@ -281,25 +287,25 @@ pub enum JAstExpr {
 
     // Module
     ModuleImport {
-        range: [usize; 2],
+        range: JRange,
         source: Box<JAstExpr>,
         new_name: Option<String>,
         imports: Option<JAstImports>,
     },
     ModuleInclude {
-        range: [usize; 2],
+        range: JRange,
         source: Box<JAstExpr>,
     },
 
     // Jump
     LoopBreak {
-        range: [usize; 2],
+        range: JRange,
     },
     LoopContinue {
-        range: [usize; 2],
+        range: JRange,
     },
     FuncReturn {
-        range: [usize; 2],
+        range: JRange,
         body: Option<Box<JAstExpr>>,
     },
 }
@@ -427,13 +433,13 @@ pub enum JAstPattern {
         expr: Box<JAstExpr>,
     },
     Placeholder {
-        range: [usize; 2],
+        range: JRange,
     },
     Parenthesized {
         expr: Box<JAstExpr>,
     },
     Destructuring {
-        range: [usize; 2],
+        range: JRange,
         items: Vec<JAstDestructuringItem>,
     },
 }
@@ -995,4 +1001,64 @@ pub fn make_ast_result(
         root: exprs,
         errors,
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn parse_ok(text: &str, mode: super::super::ParseMode) -> ParseAstResult {
+        let root = match mode {
+            super::super::ParseMode::Markup => typst_syntax::parse(text),
+            super::super::ParseMode::Code => typst_syntax::parse_code(text),
+            super::super::ParseMode::Math => typst_syntax::parse_math(text),
+        };
+
+        make_ast_result(&root, &mode).expect("make_ast_result should not fail")
+    }
+
+    #[test]
+    fn handles_erroneous_code_without_panicking() {
+        for src in ["#show:", "#for x in", "not"] {
+            let result = parse_ok(src, super::super::ParseMode::Code);
+            assert!(
+                !result.errors.is_empty(),
+                "expected syntax errors for input: {src:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn uses_null_range_for_placeholder_nodes() {
+        let result = parse_ok("#show:", super::super::ParseMode::Code);
+        let show_rule = result.root.into_iter().find_map(|expr| match expr {
+            JAstExpr::ShowRule { transform, .. } => Some(transform),
+            _ => None,
+        });
+        let Some(transform) = show_rule else {
+            panic!("expected show rule");
+        };
+
+        match *transform {
+            JAstExpr::None { range } => assert!(range.is_none()),
+            _ => panic!("expected placeholder none expression"),
+        }
+    }
+
+    #[test]
+    fn handles_erroneous_math_without_panicking() {
+        for src in ["√", "x_"] {
+            let result = parse_ok(src, super::super::ParseMode::Math);
+            assert!(
+                !result.errors.is_empty(),
+                "expected syntax errors for input: {src:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn handles_erroneous_markup_without_panicking() {
+        let result = parse_ok("[*", super::super::ParseMode::Markup);
+        assert!(!result.errors.is_empty());
+    }
 }

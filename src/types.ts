@@ -28,6 +28,8 @@ export declare function parse(
 
 // --- AST types ---
 
+export type Range = [number, number] | null;
+
 export type AstExpr =
   | AstText
   | AstSpace
@@ -93,58 +95,58 @@ export type AstExpr =
 
 export interface AstText {
   kind: "text";
-  range: [number, number];
+  range: Range;
   text: string;
 }
 
 export interface AstSpace {
   kind: "space";
-  range: [number, number];
+  range: Range;
 }
 
 export interface AstLinebreak {
   kind: "linebreak";
-  range: [number, number];
+  range: Range;
 }
 
 export interface AstParbreak {
   kind: "parbreak";
-  range: [number, number];
+  range: Range;
 }
 
 export interface AstEscape {
   kind: "escape";
-  range: [number, number];
+  range: Range;
   character: string;
 }
 
 export interface AstShorthand {
   kind: "shorthand";
-  range: [number, number];
+  range: Range;
   character: string;
 }
 
 export interface AstSmartQuote {
   kind: "smartQuote";
-  range: [number, number];
+  range: Range;
   double: boolean;
 }
 
 export interface AstStrong {
   kind: "strong";
-  range: [number, number];
+  range: Range;
   body: AstExpr[];
 }
 
 export interface AstEmph {
   kind: "emph";
-  range: [number, number];
+  range: Range;
   body: AstExpr[];
 }
 
 export interface AstRaw {
   kind: "raw";
-  range: [number, number];
+  range: Range;
   lines: string[];
   lang: string | null;
   block: boolean;
@@ -152,53 +154,53 @@ export interface AstRaw {
 
 export interface AstLink {
   kind: "link";
-  range: [number, number];
+  range: Range;
   url: string;
 }
 
 export interface AstLabel {
   kind: "label";
-  range: [number, number];
+  range: Range;
   name: string;
 }
 
 export interface AstRef {
   kind: "ref";
-  range: [number, number];
+  range: Range;
   target: string;
   supplement: AstExpr[] | null;
 }
 
 export interface AstHeading {
   kind: "heading";
-  range: [number, number];
+  range: Range;
   depth: number;
   body: AstExpr[];
 }
 
 export interface AstListItem {
   kind: "listItem";
-  range: [number, number];
+  range: Range;
   body: AstExpr[];
 }
 
 export interface AstEnumItem {
   kind: "enumItem";
-  range: [number, number];
+  range: Range;
   number: number | null;
   body: AstExpr[];
 }
 
 export interface AstTermItem {
   kind: "termItem";
-  range: [number, number];
+  range: Range;
   term: AstExpr[];
   description: AstExpr[];
 }
 
 export interface AstEquation {
   kind: "equation";
-  range: [number, number];
+  range: Range;
   body: AstExpr[];
   block: boolean;
 }
@@ -207,7 +209,7 @@ export interface AstEquation {
 
 export interface AstMath {
   kind: "math";
-  range: [number, number];
+  range: Range;
   body: AstExpr[];
 }
 
@@ -217,30 +219,30 @@ export type AstMathTextKind =
 
 export interface AstMathText {
   kind: "mathText";
-  range: [number, number];
+  range: Range;
   text: AstMathTextKind;
 }
 
 export interface AstMathIdent {
   kind: "mathIdent";
-  range: [number, number];
+  range: Range;
   name: string;
 }
 
 export interface AstMathShorthand {
   kind: "mathShorthand";
-  range: [number, number];
+  range: Range;
   character: string;
 }
 
 export interface AstMathAlignPoint {
   kind: "mathAlignPoint";
-  range: [number, number];
+  range: Range;
 }
 
 export interface AstMathDelimited {
   kind: "mathDelimited";
-  range: [number, number];
+  range: Range;
   open: AstExpr;
   body: AstExpr[];
   close: AstExpr;
@@ -248,7 +250,7 @@ export interface AstMathDelimited {
 
 export interface AstMathAttach {
   kind: "mathAttach";
-  range: [number, number];
+  range: Range;
   base: AstExpr;
   bottom: AstExpr | null;
   top: AstExpr | null;
@@ -257,20 +259,20 @@ export interface AstMathAttach {
 
 export interface AstMathPrimes {
   kind: "mathPrimes";
-  range: [number, number];
+  range: Range;
   count: number;
 }
 
 export interface AstMathFrac {
   kind: "mathFrac";
-  range: [number, number];
+  range: Range;
   num: AstExpr;
   denom: AstExpr;
 }
 
 export interface AstMathRoot {
   kind: "mathRoot";
-  range: [number, number];
+  range: Range;
   index: number | null;
   radicand: AstExpr;
 }
@@ -279,35 +281,35 @@ export interface AstMathRoot {
 
 export interface AstIdent {
   kind: "ident";
-  range: [number, number];
+  range: Range;
   name: string;
 }
 
 export interface AstNone {
   kind: "none";
-  range: [number, number];
+  range: Range;
 }
 
 export interface AstAuto {
   kind: "auto";
-  range: [number, number];
+  range: Range;
 }
 
 export interface AstBool {
   kind: "bool";
-  range: [number, number];
+  range: Range;
   value: boolean;
 }
 
 export interface AstInt {
   kind: "int";
-  range: [number, number];
+  range: Range;
   value: number;
 }
 
 export interface AstFloat {
   kind: "float";
-  range: [number, number];
+  range: Range;
   value: number;
 }
 
@@ -324,14 +326,14 @@ export type AstUnit =
 
 export interface AstNumeric {
   kind: "numeric";
-  range: [number, number];
+  range: Range;
   value: number;
   unit: AstUnit;
 }
 
 export interface AstStr {
   kind: "str";
-  range: [number, number];
+  range: Range;
   value: string;
 }
 
@@ -339,19 +341,19 @@ export interface AstStr {
 
 export interface AstCodeBlock {
   kind: "codeBlock";
-  range: [number, number];
+  range: Range;
   body: AstExpr[];
 }
 
 export interface AstContentBlock {
   kind: "contentBlock";
-  range: [number, number];
+  range: Range;
   body: AstExpr[];
 }
 
 export interface AstParenthesized {
   kind: "parenthesized";
-  range: [number, number];
+  range: Range;
   expr: AstExpr;
 }
 
@@ -361,7 +363,7 @@ export type AstArrayItem =
 
 export interface AstArray {
   kind: "array";
-  range: [number, number];
+  range: Range;
   items: AstArrayItem[];
 }
 
@@ -372,7 +374,7 @@ export type AstDictItem =
 
 export interface AstDict {
   kind: "dict";
-  range: [number, number];
+  range: Range;
   items: AstDictItem[];
 }
 
@@ -403,14 +405,14 @@ export type AstBinOp =
 
 export interface AstUnary {
   kind: "unary";
-  range: [number, number];
+  range: Range;
   op: AstUnOp;
   expr: AstExpr;
 }
 
 export interface AstBinary {
   kind: "binary";
-  range: [number, number];
+  range: Range;
   op: AstBinOp;
   lhs: AstExpr;
   rhs: AstExpr;
@@ -418,7 +420,7 @@ export interface AstBinary {
 
 export interface AstFieldAccess {
   kind: "fieldAccess";
-  range: [number, number];
+  range: Range;
   target: AstExpr;
   field: string;
 }
@@ -430,7 +432,7 @@ export type AstArg =
 
 export interface AstFuncCall {
   kind: "funcCall";
-  range: [number, number];
+  range: Range;
   callee: AstExpr;
   args: AstArg[];
 }
@@ -442,7 +444,7 @@ export type AstParam =
 
 export interface AstClosure {
   kind: "closure";
-  range: [number, number];
+  range: Range;
   name: string | null;
   params: AstParam[];
   body: AstExpr;
@@ -457,11 +459,11 @@ export type AstDestructuringItem =
 
 export type AstPattern =
   | { kind: "normal"; expr: AstExpr }
-  | { kind: "placeholder"; range: [number, number] }
+  | { kind: "placeholder"; range: Range }
   | { kind: "parenthesized"; expr: AstExpr }
   | {
       kind: "destructuring";
-      range: [number, number];
+      range: Range;
       items: AstDestructuringItem[];
     };
 
@@ -473,14 +475,14 @@ export type AstLetBindingKind =
 
 export interface AstLetBinding {
   kind: "letBinding";
-  range: [number, number];
+  range: Range;
   bindingKind: AstLetBindingKind;
   init: AstExpr | null;
 }
 
 export interface AstDestructAssignment {
   kind: "destructAssignment";
-  range: [number, number];
+  range: Range;
   pattern: AstPattern;
   value: AstExpr;
 }
@@ -489,7 +491,7 @@ export interface AstDestructAssignment {
 
 export interface AstSetRule {
   kind: "setRule";
-  range: [number, number];
+  range: Range;
   target: AstExpr;
   args: AstArg[];
   condition: AstExpr | null;
@@ -497,14 +499,14 @@ export interface AstSetRule {
 
 export interface AstShowRule {
   kind: "showRule";
-  range: [number, number];
+  range: Range;
   selector: AstExpr | null;
   transform: AstExpr;
 }
 
 export interface AstContextual {
   kind: "contextual";
-  range: [number, number];
+  range: Range;
   body: AstExpr;
 }
 
@@ -512,7 +514,7 @@ export interface AstContextual {
 
 export interface AstConditional {
   kind: "conditional";
-  range: [number, number];
+  range: Range;
   condition: AstExpr;
   ifBody: AstExpr;
   elseBody: AstExpr | null;
@@ -520,14 +522,14 @@ export interface AstConditional {
 
 export interface AstWhileLoop {
   kind: "whileLoop";
-  range: [number, number];
+  range: Range;
   condition: AstExpr;
   body: AstExpr;
 }
 
 export interface AstForLoop {
   kind: "forLoop";
-  range: [number, number];
+  range: Range;
   pattern: AstPattern;
   iterable: AstExpr;
   body: AstExpr;
@@ -550,7 +552,7 @@ export type AstImports =
 
 export interface AstModuleImport {
   kind: "moduleImport";
-  range: [number, number];
+  range: Range;
   source: AstExpr;
   newName: string | null;
   imports: AstImports | null;
@@ -558,7 +560,7 @@ export interface AstModuleImport {
 
 export interface AstModuleInclude {
   kind: "moduleInclude";
-  range: [number, number];
+  range: Range;
   source: AstExpr;
 }
 
@@ -566,17 +568,17 @@ export interface AstModuleInclude {
 
 export interface AstLoopBreak {
   kind: "loopBreak";
-  range: [number, number];
+  range: Range;
 }
 
 export interface AstLoopContinue {
   kind: "loopContinue";
-  range: [number, number];
+  range: Range;
 }
 
 export interface AstFuncReturn {
   kind: "funcReturn";
-  range: [number, number];
+  range: Range;
   body: AstExpr | null;
 }
 
