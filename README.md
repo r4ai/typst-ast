@@ -83,15 +83,15 @@ interface ParseAstResult {
   errors: ParseError[];
 }
 
-// AstExpr is a discriminated union of 60 node types.
+// AstExpr is a discriminated union of 59 node types.
 // Examples:
 type AstExpr =
-  | { kind: "text"; range: [number, number]; text: string }
-  | { kind: "heading"; range: [number, number]; depth: number; body: AstExpr[] }
-  | { kind: "strong"; range: [number, number]; body: AstExpr[] }
-  | { kind: "funcCall"; range: [number, number]; callee: AstExpr; args: AstArg[] }
-  | { kind: "binary"; range: [number, number]; op: AstBinOp; lhs: AstExpr; rhs: AstExpr }
-  | // ... and 55 more variants
+  | { kind: "text"; range: [number, number] | null; text: string }
+  | { kind: "heading"; range: [number, number] | null; depth: number; body: AstExpr[] }
+  | { kind: "strong"; range: [number, number] | null; body: AstExpr[] }
+  | { kind: "funcCall"; range: [number, number] | null; callee: AstExpr; args: AstArg[] }
+  | { kind: "binary"; range: [number, number] | null; op: AstBinOp; lhs: AstExpr; rhs: AstExpr }
+  | // ... and 54 more variants
 ```
 
 See [`src/types.ts`](./src/types.ts) for the full type definitions.
