@@ -3,7 +3,7 @@ use std::num::NonZeroUsize;
 use typst_syntax::ast::{self, AstNode};
 
 use super::expr::AstExpr;
-use super::offset::{range_of, OffsetMap};
+use super::offset::{OffsetMap, range_of};
 use super::types::*;
 
 pub fn convert_markup(markup: ast::Markup, offsets: &OffsetMap) -> Vec<AstExpr> {

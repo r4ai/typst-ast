@@ -4,14 +4,14 @@ mod offset;
 pub mod types;
 
 use serde::Serialize;
-use typst_syntax::ast;
 use typst_syntax::LinkedNode;
 use typst_syntax::SyntaxNode;
+use typst_syntax::ast;
 
 use crate::cst::{self, ParseError};
 use crate::parse_mode::ParseMode;
 use convert::{convert_code, convert_markup, convert_math};
-use offset::{build_offset_map, OffsetMap};
+use offset::{OffsetMap, build_offset_map};
 
 pub use expr::AstExpr;
 
