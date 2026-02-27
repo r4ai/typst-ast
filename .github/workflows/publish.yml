@@ -1,4 +1,4 @@
-name: Deploy
+name: Publish
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: "Tag to deploy (e.g. v0.1.0)"
+        description: "Tag to publish (e.g. v0.1.0)"
         required: true
         type: string
 
